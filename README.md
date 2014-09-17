@@ -174,7 +174,7 @@ The code inside this is very straightforward:
 
     Hoodie.extend(function(hoodie) {
       hoodie.directMessages = {
-        send: hoodie.task('directmessage').add,
+        send: hoodie.task('directmessage').start,
         on: hoodie.task('directmessage').on // probably never needed
       };
     });
@@ -211,7 +211,7 @@ __First things first__: this component will be written in node.js, and node in g
 
 Let's look at the whole thing first:
 
-    module.exports = function(hoodie) {
+    module.exports = function(hoodie, doneCallback) {
       hoodie.task.on('directmessage:add', handleNewMessage);
 
       function handleNewMessage(originDb, message) {
@@ -231,11 +231,13 @@ Let's look at the whole thing first:
         }
         return hoodie.task.success(originDb, message);
       };
+      
+      doneCallback();
     };
 
 Again, let's go through line by line.
 
-    module.exports = function(hoodie) {
+    module.exports = function(hoodie, doneCallback) {
 
 Essentially a boilerplate container for the actual backend component code. Again, we're passing the hoodie object so we can use the API inside the component.
 
@@ -282,6 +284,10 @@ Anyway, we're nearly there, we just have to clean up after ourselves:
     };
 
 Again, Hoodie knows which task `success` refers to through the `message` object and the unique id therein. Once you've called `success` on a task, it will be marked as deleted, and the frontend component (which is listening for `'directmessage:'+message.id+':remove`) will trigger the original API call's success promise. The task's life cycle is complete.
+
+    func
+    
+Allows hoodie to know...
 
 #### Additional Notes on the Frontend Component and Application Frontend
 
