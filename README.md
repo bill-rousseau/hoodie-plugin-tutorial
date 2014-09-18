@@ -225,7 +225,7 @@ Let's look at the whole thing first:
         });
       };
 
-      function addMessageCallback(error, message) {
+      function addMessageCallback(originDb, error, message) {
         if(error){
             return hoodie.task.error(originDb, message, error);
         }
@@ -276,7 +276,7 @@ but for clarity, we'll just leave that out in this example.
 
 Anyway, we're nearly there, we just have to clean up after ourselves:
 
-    function addMessageCallback(error, object) {
+    function addMessageCallback(originDb, error, object) {
         if(error){
             return hoodie.task.error(originDb, message, error);
         }
